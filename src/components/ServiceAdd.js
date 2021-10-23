@@ -1,22 +1,47 @@
 import { useSelector, useDispatch } from "react-redux";
 import {
+  addService,
+  editService,
+  clearCurrentServiceId,
+} from "../store-toolkit/SliceServiceList";
+import {
   changeServiceField,
   clearForm,
-  addService,
-} from "../actions/actionCreators";
+} from "../store-toolkit/SliceServiceAdd";
 
 function ServiceAdd() {
   const dispatch = useDispatch();
   const item = useSelector((state) => state.serviceAdd);
+  const id = useSelector((state) => state.serviceList.currentEditServiceId);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    dispatch(changeServiceField(name, value));
+    dispatch(changeServiceField({ type: name, value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(addService(item.name, item.price));
+
+    if (!item.name || !item.price) {
+      return;
+    }
+
+    const newItemData = {
+      name: item.name,
+      price: Number(item.price),
+    };
+
+    if (id) {
+      const payload = {
+        id,
+        name: item.name,
+        price: Number(item.price),
+      };
+      dispatch(editService(payload));
+      dispatch(clearCurrentServiceId());
+    } else {
+      dispatch(addService(newItemData));
+    }
     dispatch(clearForm());
   };
 

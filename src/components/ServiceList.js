@@ -1,16 +1,22 @@
 import { useSelector, useDispatch } from "react-redux";
-import { removeService, editService } from "../actions/actionCreators";
+import {
+  removeService,
+  addCurrentServiceId,
+} from "../store-toolkit/SliceServiceList";
+import { changeServiceField } from "../store-toolkit/SliceServiceAdd";
 
 function ServiceList() {
   const dispatch = useDispatch();
-  const items = useSelector((state) => state.serviceList);
+  const items = useSelector((state) => state.serviceList.items);
 
   const handleRemove = (id) => {
     dispatch(removeService(id));
   };
 
   const handleEdit = (id, name, price) => {
-    dispatch(editService(id, name, price));
+    dispatch(changeServiceField({ type: "name", value: name }));
+    dispatch(changeServiceField({ type: "price", value: price.toString() }));
+    dispatch(addCurrentServiceId({ id }));
   };
 
   return (
