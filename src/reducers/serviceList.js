@@ -11,7 +11,19 @@ export default function serviceListReducer(state = initialState, action) {
   switch (action.type) {
     case ADD_SERVICE:
       const { name, price } = action.payload;
-      return [...state, { id: shortid.generate(), name, price: Number(price) }];
+      if (state.find((el) => el.name === name)) {
+        return state.map((el, i) => {
+          if (el.name === name) {
+            state[i].price = price;
+          }
+          return el;
+        });
+      } else {
+        return [
+          ...state,
+          { id: shortid.generate(), name, price: Number(price) },
+        ];
+      }
 
     case REMOVE_SERVICE:
       const { id } = action.payload;

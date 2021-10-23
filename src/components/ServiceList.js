@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { removeService } from "../actions/actionCreators";
+import { removeService, editService } from "../actions/actionCreators";
 
 function ServiceList() {
   const dispatch = useDispatch();
@@ -9,9 +9,8 @@ function ServiceList() {
     dispatch(removeService(id));
   };
 
-  const handleEdit = (id) => {
-    console.log(id);
-    // dispatch(editService(id));
+  const handleEdit = (id, name, price) => {
+    dispatch(editService(id, name, price));
   };
 
   return (
@@ -19,7 +18,10 @@ function ServiceList() {
       {items.map((o) => (
         <li className="list-group-item" key={o.id}>
           {o.name} <span style={{ fontWeight: "bold" }}>{o.price}</span>
-          <button className="btn btn-info m-2" onClick={() => handleEdit(o.id)}>
+          <button
+            className="btn btn-info m-2"
+            onClick={() => handleEdit(o.id, o.name, o.price)}
+          >
             Edit
           </button>
           <button
